@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: budget
+    config:
+      materialized: view
+    description: >
+      Info about budget. Posteriormente, la primary key va a ser una combinacion de product_id y month.
+    columns:
+      - name: product_id
+        constraints:
+          - type: not_null
+        data_type: varchar
+      - name: quantity
+        data_type: int
+      - name: month
+        constraints:
+          - type: not_null
+        data_type: date
+      - name: date_load
+        data_type: TIMESTAMP_TZ
