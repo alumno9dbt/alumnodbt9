@@ -19,13 +19,16 @@ WITH src_promos AS (
 
 promos_transform AS (
     SELECT
-        {{ dbt_utils.generate_surrogate_key(['promo_id']) }} AS promo_id
-        , promo_id AS promo_name
-        , discount
-        , status
-        , _fivetran_deleted
-        , _fivetran_synced AS date_load
+        {{ dbt_utils.generate_surrogate_key(['promo_id']) }} AS promo_id,
+        promo_id AS promo_name,
+        discount,
+        status,
+        CASE
+            WHEN _fivetran_deleted IS NULL THEN FALSE
+            ELSE _fivetran_deleted
+        END AS _fivetran_deleted,
+        CONVERT_TIMEZONE('Europe/Madrid', 'UTC', CAST(_fivetran_synced AS TIMESTAMP_NTZ)) AS _fivetran_synced
     FROM src_promos
     )
 
-SELECT * FROM promos_id_hash
+SELECT * FROM promos_transform
