@@ -19,8 +19,11 @@ products_transform AS (
         -- Vamos a pasar price a order_items
         name,
         inventory,
-        _fivetran_deleted,
-        _fivetran_synced
+        CASE
+            WHEN _fivetran_deleted IS NULL THEN FALSE
+            ELSE _fivetran_deleted
+        END AS _fivetran_deleted,
+        CONVERT_TIMEZONE('Europe/Madrid', 'UTC', CAST(_fivetran_synced AS TIMESTAMP_NTZ)) AS _fivetran_synced
 
     FROM src_products
 
