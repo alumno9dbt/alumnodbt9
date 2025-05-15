@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: stg_sets
+    description: "Vista staging con información básica de los sets/colecciones oficiales de Magic The Gathering."
+    columns:
+      - name: set_code
+        description: "Código único del set."
+        tests:
+          - not_null
+          - unique
+      - name: set_name
+        description: "Nombre del set."
+        tests:
+          - not_null

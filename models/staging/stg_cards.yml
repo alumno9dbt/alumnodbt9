@@ -1,0 +1,16 @@
+version: 2
+
+models:
+  - name: stg_cards
+    description: "Vista staging que contiene todas las cartas del dataset AllPrintings. Información base de cada carta."
+    columns:
+      - name: card_id
+        description: "Identificador único (relativo) de la carta (mtgjson_id o scryfall_id)."
+        # no se aplica unique porque en MTGJSON muchas versiones de cartas comparten card_id.
+        tests:
+          - not_null
+      - name: colors_array
+        description: "Array de colores asignados a la carta."
+      - name: type_line
+        description: "Cadena de texto con los tipos de la carta."
+

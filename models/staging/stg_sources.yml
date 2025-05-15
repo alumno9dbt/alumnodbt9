@@ -2,7 +2,21 @@ version: 2
 
 sources:
   - name: bronze
+    description: "Fuente externa que contiene los datos raw cargados desde el dataset mtgjson (AllPrintings y AllPrices)."
     database: ALUMNO9_DEV_BRONZE_DB
     schema: bronze
     tables:
       - name: raw_printings
+        description: >
+          Tabla raw con los datos crudos de AllPrintings.json. Contiene toda la información de sets y cartas.
+          Esta tabla solo tiene una columna (raw VARIANT) porque cada fila representa un único bloque JSON completo,
+          manteniendo el formato original del archivo de ingesta. 
+          Se utiliza este patrón para asegurar trazabilidad y consistencia de datos en la capa Bronze.
+      - name: raw_prices
+        description: >
+          Tabla raw con los datos crudos de AllPrices.json. 
+          Contiene la evolución histórica de precios de las cartas. 
+          Esta tabla solo tiene una columna porque cada fila representa un único bloque JSON completo, 
+          manteniendo el formato original del archivo de ingesta. 
+          Esta estructura facilita la ingesta y posterior transformación en la capa Silver mediante dbt.
+

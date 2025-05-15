@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: stg_prices
+    description: "Vista staging con los precios de cada carta en formato físico (paper) y digital (mtgo)."
+    columns:
+      - name: card_id
+        description: "Identificador único de la carta."
+        tests:
+          - not_null
+          - unique
+      - name: paper_prices
+        description: "Precios de la carta en formato físico."
+      - name: mtgo_prices
+        description: "Precios de la carta en formato digital (Magic Online)."
