@@ -38,27 +38,22 @@ clean-targets:         # directories to be removed by `dbt clean`
 models:
   +transient: false
   my_new_project:
-    # Applies to all files under models/example/
-    example:
+    staging:
+      +materialized: view
+      +database: ALUMNO9_DEV_SILVER_DB
+
+    marts:
       +materialized: table
+      +database: ALUMNO9_DEV_GOLD_DB
 
-# Applies to all files under models/example/
-  staging:
-    +materialized: view
-    +database: "{{ env_var('DBT_ENVIRONMENTS') }}_SILVER_DB"
-    sql_server_dbo:
-      +schema: sql_server_dbo
-
-
-  marts:
-    +materialized: table
-    +database: "{{ env_var('DBT_ENVIRONMENTS') }}_GOLD_DB"
-    core:
-      +schema: core
+    seeds:
+      +database: ALUMNO9_DEV_BRONZE_DB
+      +schema: seed_data
 
 seeds:
   +schema: seed_data
-  +database: "{{ env_var('DBT_ENVIRONMENTS') }}_BRONZE_DB"        
+  +database: "{{ env_var('DBT_ENVIRONMENTS') }}_BRONZE_DB"
+         
 snapshots:
   +transient: false
   +target_database: "{{ env_var('DBT_ENVIRONMENTS') }}_SILVER_DB"

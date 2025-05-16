@@ -1,0 +1,14 @@
+version: 2
+
+models:
+  - name: stg_card_types
+    description: "Vista staging que contiene una fila por cada tipo asociado a cada carta."
+    columns:
+      - name: card_id
+        description: "Identificador único de la carta."
+        tests:
+          - not_null
+      - name: type
+        description: "Tipo individual extraído de type_line (ej: Creature, Land, Artifact...)."
+        tests:
+          - not_null

@@ -1,0 +1,30 @@
+version: 2
+
+models:
+  - name: fact_card_prices
+    description: "Tabla de hechos con los precios diarios de cartas físicas por proveedor."
+    columns:
+      - name: card_id
+        description: "Identificador único de la carta."
+        tests:
+          - not_null:
+              description: "Cada precio debe estar asociado a una carta válida (card_id no puede ser nulo)."
+
+      - name: price_date
+        description: "Fecha del precio reportado."
+        tests:
+          - not_null:
+              description: "Debe existir siempre una fecha asociada al precio."
+
+      - name: provider
+        description: "Proveedor del precio (p. ej., tcgplayer, cardmarket)."
+        tests:
+          - not_null:
+              description: "Debe especificarse el proveedor para cada precio."
+
+      - name: price
+        description: "Precio reportado para la carta en una fecha y proveedor específicos."
+        tests:
+          - not_null:
+              description: "El precio no puede ser nulo."
+
