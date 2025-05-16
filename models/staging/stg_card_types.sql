@@ -3,8 +3,7 @@
 WITH base AS (
     SELECT
         card_id,
-        type_line,
-        SPLIT(REPLACE(type_line, '—', ''), ' ') AS type_array
+        type_line
     FROM {{ ref('stg_cards') }}
     WHERE type_line IS NOT NULL
 ),
@@ -12,9 +11,9 @@ WITH base AS (
 types_exploded AS (
     SELECT
         card_id,
-        LOWER(TRIM(type.value::string)) AS type
+        LOWER(TRIM(t.value::string)) AS type
     FROM base,
-         LATERAL FLATTEN(input => type_array) AS type
+         LATERAL FLATTEN(input => SPLIT(REPLACE(type_line, '—', ''), ' ')) t
 ),
 
 cleaned AS (
