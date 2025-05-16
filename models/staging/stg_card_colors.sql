@@ -11,10 +11,25 @@ WITH base AS (
 colors_exploded AS (
     SELECT
         card_id,
-        color.value::string AS color
+        UPPER(TRIM(c.value::string)) AS color_code
     FROM base,
-         LATERAL FLATTEN(input => colors_array) AS color
+         LATERAL FLATTEN(input => colors_array) c
+),
+
+colors_named AS (
+    SELECT
+        card_id,
+        CASE color_code
+            WHEN 'W' THEN 'White'
+            WHEN 'U' THEN 'Blue'
+            WHEN 'B' THEN 'Black'
+            WHEN 'R' THEN 'Red'
+            WHEN 'G' THEN 'Green'
+            ELSE color_code  -- por si aparece algo inesperado
+        END AS color
+    FROM colors_exploded
 )
 
 SELECT *
-FROM colors_exploded
+FROM colors_named
+WHERE color IS NOT NULL

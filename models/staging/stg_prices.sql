@@ -1,16 +1,17 @@
 {{ config(materialized='view') }}
 
-WITH cards_flattened AS (
+WITH prices_raw AS (
     SELECT
-        card.value AS price_block,
-        card.key AS card_id
-    FROM {{ source('bronze', 'raw_prices') }},
-         LATERAL FLATTEN(input => raw) AS card
+        raw:"uuid"::string AS card_id,
+        raw:"paper" AS paper_prices,
+        raw:"mtgo" AS mtgo_prices
+    FROM {{ source('bronze', 'raw_prices') }}
+    WHERE raw:"uuid" IS NOT NULL
 )
 
 SELECT
     card_id,
-    price_block:"paper" AS paper_prices,
-    price_block:"mtgo" AS mtgo_prices
-FROM cards_flattened
+    paper_prices,
+    mtgo_prices
+FROM prices_raw
 
