@@ -14,8 +14,7 @@ cards_exploded AS (
 )
 
 SELECT
-    {{ dbt_utils.generate_surrogate_key(['card_object:identifiers:mtgjsonV4Id::string', "'cardkingdom'"]) }} AS card_id,
-    card_object:identifiers:mtgjsonV4Id::string AS raw_card_id,
+    card_object:identifiers:scryfallId::string AS card_id,
     card_object:name::string AS card_name,
     card_object:type::string AS type_line,
     card_object:manaCost::string AS mana_cost,
@@ -28,4 +27,4 @@ SELECT
     TRY_TO_NUMBER(card_object:toughness::string) AS toughness,
     card_object:flavorText::string AS flavor_text
 FROM cards_exploded
-WHERE card_object:identifiers:mtgjsonV4Id IS NOT NULL
+WHERE card_object:identifiers:scryfallId IS NOT NULL

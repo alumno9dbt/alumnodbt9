@@ -50,6 +50,6 @@ SELECT
     b.set_code,
     b.set_code_card
 FROM base b
-LEFT JOIN colors c     ON b.card_id = c.card_id
-LEFT JOIN types t      ON b.card_id = t.card_id
-LEFT JOIN rarities r   ON b.card_id = r.card_id
+LEFT JOIN colors c ON b.card_id = c.card_id
+LEFT JOIN types t ON b.card_id = t.card_id
+LEFT JOIN rarities r ON b.card_id = r.card_id
