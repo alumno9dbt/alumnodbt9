@@ -14,33 +14,18 @@ cards_exploded AS (
 )
 
 SELECT
-    -- Clave primaria obligatoria y coherente
-    card_object:identifiers:mtgjsonV4Id::string AS card_id,
-
-    -- Información textual
+    {{ dbt_utils.generate_surrogate_key(['card_object:identifiers:mtgjsonV4Id::string', "'cardkingdom'"]) }} AS card_id,
+    card_object:identifiers:mtgjsonV4Id::string AS raw_card_id,
     card_object:name::string AS card_name,
     card_object:type::string AS type_line,
     card_object:manaCost::string AS mana_cost,
     card_object:rarity::string AS rarity,
-
-    -- Identificador del set (dos versiones)
     set_code,
     card_object:setCode::string AS set_code_card,
-
-    -- Colores
     card_object:colors AS colors_array,
     ARRAY_TO_STRING(card_object:colors, ', ') AS colors_string,
-
-    -- Atributos numéricos (si aplica)
     TRY_TO_NUMBER(card_object:power::string) AS power,
     TRY_TO_NUMBER(card_object:toughness::string) AS toughness,
-
-    -- Otros detalles
-    card_object:flavorText::string AS flavor_text,
-
-    -- Identificadores externos
-    card_object:identifiers:scryfallId::string AS scryfall_id,
-    card_object:identifiers:mtgjsonV4Id::string AS mtgjsonv4_id
-
+    card_object:flavorText::string AS flavor_text
 FROM cards_exploded
 WHERE card_object:identifiers:mtgjsonV4Id IS NOT NULL

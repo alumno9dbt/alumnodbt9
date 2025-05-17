@@ -2,17 +2,17 @@
 
 WITH base AS (
     SELECT
-        c.mtgjsonv4_id AS card_id, 
-        c.card_name,
-        c.type_line,
-        c.mana_cost,
-        c.set_code,
-        c.set_code_card,
-        c.power,
-        c.toughness,
-        c.flavor_text
-    FROM {{ ref('stg_cards') }} c
-    WHERE c.mtgjsonv4_id IS NOT NULL
+        card_id,
+        card_name,
+        type_line,
+        mana_cost,
+        set_code,
+        set_code_card,
+        power,
+        toughness,
+        flavor_text
+    FROM {{ ref('stg_cards') }}
+    WHERE card_id IS NOT NULL
 ),
 
 colors AS (
@@ -29,11 +29,6 @@ types AS (
         LISTAGG(type, ', ') AS type_names
     FROM {{ ref('stg_card_types') }}
     GROUP BY card_id
-),
-
-identifiers AS (
-    SELECT *
-    FROM {{ ref('stg_identifiers') }}
 ),
 
 rarities AS (
@@ -53,11 +48,8 @@ SELECT
     r.rarity,
     b.flavor_text,
     b.set_code,
-    b.set_code_card,
-    i.scryfall_id,
-    i.mtgjsonv4_id
+    b.set_code_card
 FROM base b
 LEFT JOIN colors c     ON b.card_id = c.card_id
 LEFT JOIN types t      ON b.card_id = t.card_id
-LEFT JOIN identifiers i ON b.card_id = i.card_id
 LEFT JOIN rarities r   ON b.card_id = r.card_id
