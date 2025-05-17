@@ -1,6 +1,6 @@
 {{ config(materialized='view') }}
 
-WITH set_data AS (
+WITH printings AS (
     SELECT raw AS set_object
     FROM {{ source('bronze', 'raw_printings') }}
 ),
@@ -8,13 +8,14 @@ WITH set_data AS (
 cards_exploded AS (
     SELECT
         set_object:"code"::string AS set_code,
-        c.value AS card_object
-    FROM set_data,
-         LATERAL FLATTEN(input => set_object:"cards") c
+        card.value AS card_object
+    FROM printings,
+         LATERAL FLATTEN(input => set_object:"cards") AS card
 )
 
 SELECT
     card_object:identifiers:scryfallId::string AS card_id,
+    card_object:identifiers:mtgjsonV4Id::string AS mtgjsonv4_id,
     card_object:name::string AS card_name,
     card_object:type::string AS type_line,
     card_object:manaCost::string AS mana_cost,
@@ -28,3 +29,4 @@ SELECT
     card_object:flavorText::string AS flavor_text
 FROM cards_exploded
 WHERE card_object:identifiers:scryfallId IS NOT NULL
+  AND card_object:identifiers:mtgjsonV4Id IS NOT NULL
