@@ -1,33 +1,61 @@
 {{ config(
     materialized = 'incremental',
-    unique_key = ['card_id', 'price_date', 'provider'],
-    on_schema_change = 'ignore',
-    incremental_strategy = 'append'
+    unique_key = ['card_id', 'provider', 'channel', 'product_type', 'price_date']
 ) }}
 
-WITH retail_normal AS (
+WITH base AS (
     SELECT
         card_id,
-        provider,
-        TRY_PARSE_JSON(retail_prices) AS retail_prices_json
-    FROM {{ ref('stg_prices') }}
-    WHERE retail_prices IS NOT NULL
+        provider.key::string AS provider,
+        provider.value AS provider_data
+    FROM {{ ref('stg_prices') }},
+         LATERAL FLATTEN(input => paper_prices) AS provider
 ),
 
-prices_flattened AS (
+channels AS (
     SELECT
         card_id,
         provider,
-        price.key::string AS price_date_str,
-        price.value::string AS price_value_str
-    FROM retail_normal,
-         LATERAL FLATTEN(input => retail_prices_json) price
+        channel.key::string AS channel,
+        channel.value AS channel_data
+    FROM base,
+         LATERAL FLATTEN(input => provider_data) AS channel
+),
+
+types AS (
+    SELECT
+        card_id,
+        provider,
+        channel,
+        type.key::string AS product_type,
+        type.value AS prices_by_date
+    FROM channels,
+         LATERAL FLATTEN(input => channel_data) AS type
+),
+
+final_prices AS (
+    SELECT
+        card_id,
+        provider,
+        channel,
+        product_type,
+        TRY_TO_DATE(date_price.key::string) AS price_date,
+        date_price.value::float AS price
+    FROM types,
+         LATERAL FLATTEN(input => prices_by_date) AS date_price
 )
 
 SELECT
     card_id,
     provider,
-    TO_DATE(price_date_str) AS price_date,
-    TRY_TO_DECIMAL(price_value_str, 10, 2) AS price
-FROM prices_flattened
-WHERE TRY_TO_DECIMAL(price_value_str, 10, 2) IS NOT NULL
+    channel,
+    product_type,
+    price_date,
+    price AS mid_price
+FROM final_prices
+WHERE card_id IS NOT NULL
+  AND price_date IS NOT NULL
+  AND price IS NOT NULL
+  {% if is_incremental() %}
+    AND price_date > COALESCE((SELECT MAX(price_date) FROM {{ this }}), '1900-01-01')
+  {% endif %}
