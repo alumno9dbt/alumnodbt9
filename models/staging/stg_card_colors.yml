@@ -1,0 +1,22 @@
+version: 2
+
+models:
+  - name: stg_card_colors
+    description: >
+      Tabla normalizada que representa los colores asociados a cada impresión de carta. 
+      Explota el array de colores y mapea las iniciales (W, U, B, R, G) a nombres completos.
+    columns:
+      - name: card_id
+        description: ID de la carta.
+        tests:
+          - not_null
+
+      - name: color_initial
+        description: Inicial del color según convención de Magic (W, U, B, R, G).
+        tests:
+          - not_null
+
+      - name: color_name
+        description: Nombre completo del color (White, Blue, Black, Red, Green).
+        tests:
+          - not_null

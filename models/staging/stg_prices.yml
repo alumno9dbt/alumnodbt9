@@ -1,0 +1,22 @@
+version: 2
+
+models:
+  - name: stg_prices
+    description: >
+      Precios actuales de cada impresión, en distintas monedas y formatos.
+    columns:
+      - name: card_id
+        description: ID de la carta.
+        tests:
+          - not_null
+
+      - name: usd
+        description: Precio en USD.
+      - name: usd_foil
+        description: Precio foil en USD.
+      - name: eur
+        description: Precio en EUR.
+      - name: eur_foil
+        description: Precio foil en EUR.
+      - name: tix
+        description: Precio en MTGO.

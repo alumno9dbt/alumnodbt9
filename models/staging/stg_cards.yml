@@ -1,0 +1,53 @@
+version: 2
+
+models:
+  - name: stg_cards
+    description: >
+      Modelo staging de cartas con limpieza y normalización básica. Cada fila representa una impresión de una carta.
+    columns:
+      - name: id
+        description: ID único de la impresión.
+        tests:
+          - not_null
+          - unique
+
+      - name: oracle_id
+        description: ID compartido entre versiones de la misma carta.
+
+      - name: name
+        description: Nombre de la carta.
+        tests:
+          - not_null
+
+      - name: set_code
+        description: Código del set.
+
+      - name: collector_number
+        description: Número de colección.
+
+      - name: rarity
+        description: Rareza textual.
+
+      - name: mana_cost
+        description: Coste de maná como string (ej. "{1}{U}{B}").
+
+      - name: cmc
+        description: Costo convertido de maná (numérico).
+
+      - name: type_line
+        description: Tipos de la carta.
+
+      - name: oracle_text
+        description: Texto funcional/reglas.
+
+      - name: colors_array
+        description: Array de colores (de la propiedad `colors` en Scryfall).
+
+      - name: color_identity_array
+        description: Array de identidad de color.
+
+      - name: layout
+        description: Tipo de diseño de la carta (normal, transform, etc).
+
+      - name: released_at
+        description: Fecha de publicación de la impresión.

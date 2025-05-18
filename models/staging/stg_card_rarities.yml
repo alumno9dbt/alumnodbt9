@@ -1,0 +1,14 @@
+version: 2
+
+models:
+  - name: stg_card_rarities
+    description: >
+      Dimensión de rarezas únicas disponibles en el dataset, con un orden asignado.
+    columns:
+      - name: rarity
+        description: Rareza textual (ej. common, rare).
+        tests:
+          - not_null
+          - unique
+      - name: rarity_rank
+        description: Valor numérico asociado al orden lógico de rareza.
