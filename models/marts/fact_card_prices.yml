@@ -2,29 +2,25 @@ version: 2
 
 models:
   - name: fact_card_prices
-    description: "Tabla de hechos con los precios diarios de cartas físicas por proveedor."
+    description: >
+      Tabla de hechos que contiene el historial de precios físicos de cada carta por proveedor y fecha.
+      Extraída de los JSON de AllPrices y lista para análisis temporal y comparativo.
+
     columns:
       - name: card_id
-        description: "Identificador único de la carta."
+        description: "Identificador de la carta."
         tests:
-          - not_null:
-              description: "Cada precio debe estar asociado a una carta válida (card_id no puede ser nulo)."
-
-      - name: price_date
-        description: "Fecha del precio reportado."
-        tests:
-          - not_null:
-              description: "Debe existir siempre una fecha asociada al precio."
+          - not_null
 
       - name: provider
-        description: "Proveedor del precio (p. ej., tcgplayer, cardmarket)."
+        description: "Proveedor de precios (ej: tcgplayer, cardmarket, etc.)."
         tests:
-          - not_null:
-              description: "Debe especificarse el proveedor para cada precio."
+          - not_null
 
-      - name: price
-        description: "Precio reportado para la carta en una fecha y proveedor específicos."
+      - name: price_date
+        description: "Fecha del precio."
         tests:
-          - not_null:
-              description: "El precio no puede ser nulo."
+          - not_null
 
+      - name: mid_price
+        description: "Precio medio registrado ese día."

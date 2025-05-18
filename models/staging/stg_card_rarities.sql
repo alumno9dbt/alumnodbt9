@@ -4,4 +4,5 @@ SELECT
     card_id,
     rarity
 FROM {{ ref('stg_cards') }}
-WHERE rarity IS NOT NULL
+WHERE card_id IS NOT NULL
+  AND rarity IS NOT NULL

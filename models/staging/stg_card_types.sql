@@ -11,17 +11,17 @@ WITH base AS (
 types_exploded AS (
     SELECT
         card_id,
-        LOWER(TRIM(t.value::string)) AS type
+        LOWER(TRIM(f.value::string)) AS raw_type
     FROM base,
-         LATERAL FLATTEN(input => SPLIT(REPLACE(type_line, '—', ''), ' ')) t
+         LATERAL FLATTEN(input => SPLIT(REPLACE(type_line, '—', ''), ' ')) AS f
 ),
 
 cleaned AS (
     SELECT
         card_id,
-        INITCAP(type) AS type
+        INITCAP(raw_type) AS type
     FROM types_exploded
-    WHERE type != ''
+    WHERE raw_type != ''
 )
 
 SELECT DISTINCT card_id, type
