@@ -2,7 +2,7 @@ with cards as (
     select
         id as card_id,
         type_line
-    from {{ ref('stg_cards') }}
+    from {{ ref('base_cards') }}
     where type_line is not null
 ),
 

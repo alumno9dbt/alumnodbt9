@@ -1,0 +1,54 @@
+version: 2
+
+models:
+  - name: base_cards
+    description: >
+      Modelo base que representa la tabla cruda 'cards' con limpieza mínima de nombres, tipos y estructuras.
+      Esta tabla es la base para todos los modelos de staging que derivan de información de cartas.
+    columns:
+      - name: id
+        description: ID único de impresión de la carta.
+        tests:
+          - not_null
+          - unique
+
+      - name: oracle_id
+        description: ID compartido entre versiones de una misma carta.
+
+      - name: name
+        description: Nombre de la carta.
+        tests:
+          - not_null
+
+      - name: set_code
+        description: Código del set al que pertenece la carta.
+
+      - name: collector_number
+        description: Número de colección.
+
+      - name: rarity
+        description: Rareza textual (common, uncommon, rare, mythic).
+
+      - name: mana_cost
+        description: Coste de maná en formato simbólico.
+
+      - name: cmc
+        description: Converted mana cost (float).
+
+      - name: type_line
+        description: Tipos y subtipos combinados de la carta.
+
+      - name: oracle_text
+        description: Texto funcional de reglas.
+
+      - name: colors
+        description: Lista de colores crudos (string separada por comas).
+
+      - name: color_identity
+        description: Identidad de color para formatos específicos como Commander.
+
+      - name: layout
+        description: Diseño estructural de la carta (normal, transform, etc).
+
+      - name: released_at
+        description: Fecha de publicación de la carta.

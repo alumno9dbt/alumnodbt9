@@ -2,7 +2,7 @@ with cards as (
     select
         id as card_id,
         colors_array
-    from {{ ref('stg_cards') }}
+    from {{ ref('base_cards') }}
 ),
 
 exploded as (

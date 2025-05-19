@@ -1,7 +1,7 @@
 with source as (
     select distinct
         lower(rarity) as rarity
-    from {{ ref('stg_cards') }}
+    from {{ ref('base_cards') }}
     where rarity is not null
 )
 
