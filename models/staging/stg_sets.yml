@@ -3,44 +3,16 @@ version: 2
 models:
   - name: stg_sets
     description: >
-      Vista staging que contiene la información principal de cada set de cartas de Magic: The Gathering.
-      Los datos provienen de AllPrintings.json, transformados y tipificados correctamente.
-      Esta tabla sirve como dimensión en la capa Gold para analizar las cartas por set, tipo, fechas y flags.
-
+      Datos básicos de los sets.
     columns:
       - name: set_code
-        description: "Código único del set, usado como clave primaria."
+        description: Código del set.
         tests:
           - not_null
           - unique
 
-      - name: set_name
-        description: "Nombre completo del set (ej. Dominaria United, Zendikar Rising)."
-        tests:
-          - not_null
-
-      - name: release_date
-        description: "Fecha oficial de lanzamiento del set, tipificada como DATE."
-        tests:
-          - not_null
-
       - name: set_type
-        description: "Tipo de set (ej: expansion, core, promo, box, token, etc.)."
+        description: Tipo de set.
         tests:
-          - not_null
-
-      - name: block_name
-        description: "Nombre del bloque temático al que pertenece el set, si aplica (ej: Ravnica, Innistrad)."
-
-      - name: base_set_size
-        description: "Cantidad de cartas oficiales que forman la base del set (sin promos, tokens, etc.)."
-
-      - name: total_set_size
-        description: "Cantidad total de cartas incluyendo tokens, promos, y otras variantes."
-
-      - name: is_foil_only
-        description: "Indica si el set se lanzó únicamente en versión foil."
-
-      - name: is_online_only
-        description: "Indica si el set se publicó solo en plataformas digitales (ej: MTGO)."
-
+          - accepted_values:
+              values: ["expansion", "core", "commander", "masterpiece", "funny", "draft_innovation", "starter", "promo"]

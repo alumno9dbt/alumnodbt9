@@ -3,18 +3,20 @@ version: 2
 models:
   - name: stg_prices
     description: >
-      Vista staging que contiene los precios sin transformar de cada carta,
-      obtenidos desde AllPrices.json. Incluye datos de precios físicos (paper)
-      y digitales (mtgo), aún sin explotar.
-
+      Precios actuales de cada impresión, en distintas monedas y formatos.
     columns:
       - name: card_id
-        description: "Identificador de la carta (uuid de AllPrices)."
+        description: ID de la carta.
         tests:
           - not_null
 
-      - name: paper_prices
-        description: "Objeto JSON con precios de cartas físicas por proveedor y fecha."
-
-      - name: mtgo_prices
-        description: "Objeto JSON con precios de cartas digitales por proveedor y fecha."
+      - name: usd
+        description: Precio en USD.
+      - name: usd_foil
+        description: Precio foil en USD.
+      - name: eur
+        description: Precio en EUR.
+      - name: eur_foil
+        description: Precio foil en EUR.
+      - name: tix
+        description: Precio en MTGO.

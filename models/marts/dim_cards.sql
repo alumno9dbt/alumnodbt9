@@ -1,44 +1,59 @@
-{{ config(materialized='table') }}
+with base as (
+    select *
+    from {{ ref('base_cards') }}
+),
 
-WITH base AS (
-    SELECT
+colors as (
+    select
         card_id,
-        card_name,
-        type_line,
-        mana_cost,
-        rarity,
-        power,
-        toughness,
-        flavor_text,
-        set_code_card AS set_code
-    FROM {{ ref('stg_cards') }}
+        listagg(color_name, ', ') as color_names
+    from {{ ref('stg_card_colors') }}
+    group by card_id
 ),
 
-colors AS (
-    SELECT card_id, LISTAGG(color, ', ') AS colors
-    FROM {{ ref('stg_card_colors') }}
-    GROUP BY card_id
+types as (
+    select
+        card_id,
+        main_types,
+        subtypes
+    from {{ ref('stg_card_types') }}
 ),
 
-types AS (
-    SELECT card_id, LISTAGG(type, ', ') AS types
-    FROM {{ ref('stg_card_types') }}
-    GROUP BY card_id
+rarities as (
+    select *
+    from {{ ref('stg_card_rarities') }}
+),
+
+sets as (
+    select
+        set_code,
+        set_name,
+        released_at as set_released_at,
+        set_type
+    from {{ ref('stg_sets') }}
 )
 
-SELECT
-    b.card_id,
-    b.card_name,
-    b.type_line,
-    b.mana_cost,
-    b.rarity,
-    b.power,
-    b.toughness,
-    b.flavor_text,
+select
+    b.id as card_id,
+    b.oracle_id,
+    b.name,
     b.set_code,
-    c.colors,
-    t.types
-FROM base b
-LEFT JOIN colors c ON b.card_id = c.card_id
-LEFT JOIN types t ON b.card_id = t.card_id
-WHERE b.card_id IS NOT NULL
+    s.set_name,
+    s.set_released_at,
+    s.set_type,
+    b.collector_number,
+    b.rarity,
+    r.rarity_rank,
+    b.mana_cost,
+    b.cmc,
+    t.main_types,
+    t.subtypes,
+    coalesce(c.color_names, 'Colorless') as color_names,
+    b.layout,
+    b.oracle_text,
+    b.released_at
+from base b
+left join types t on b.id = t.card_id
+left join colors c on b.id = c.card_id
+left join rarities r on lower(b.rarity) = r.rarity
+left join sets s on b.set_code = s.set_code

@@ -1,35 +1,33 @@
-{{ config(materialized='view') }}
-
-WITH base AS (
-    SELECT
-        card_id,
+with cards as (
+    select
+        id as card_id,
         colors_array
-    FROM {{ ref('stg_cards') }}
-    WHERE colors_array IS NOT NULL
+    from {{ ref('base_cards') }}
 ),
 
-colors_exploded AS (
-    SELECT
+exploded as (
+    select
         card_id,
-        UPPER(TRIM(c.value::string)) AS color_code
-    FROM base,
-         LATERAL FLATTEN(input => colors_array) c
+        trim(color.value::string) as color_initial
+    from cards,
+         lateral flatten(input => colors_array) as color
+    where color.value is not null
 ),
 
-colors_named AS (
-    SELECT
+labeled as (
+    select
         card_id,
-        CASE color_code
-            WHEN 'W' THEN 'White'
-            WHEN 'U' THEN 'Blue'
-            WHEN 'B' THEN 'Black'
-            WHEN 'R' THEN 'Red'
-            WHEN 'G' THEN 'Green'
-            ELSE color_code  -- por si aparece algo inesperado
-        END AS color
-    FROM colors_exploded
+        color_initial,
+        case color_initial
+            when 'W' then 'White'
+            when 'U' then 'Blue'
+            when 'B' then 'Black'
+            when 'R' then 'Red'
+            when 'G' then 'Green'
+            else 'Unknown'
+        end as color_name
+    from exploded
 )
 
-SELECT *
-FROM colors_named
-WHERE color IS NOT NULL
+select *
+from labeled

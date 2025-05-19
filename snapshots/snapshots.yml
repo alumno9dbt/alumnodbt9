@@ -1,0 +1,12 @@
+version: 2
+
+snapshots:
+  - name: stg_card_prices_snapshot
+    description: >
+      Snapshot de precios de cartas. Guarda cambios históricos en precios diarios.
+    columns:
+      - name: card_id
+        description: ID único de la impresión.
+        tests:
+          - not_null
+          - unique

@@ -2,24 +2,27 @@ version: 2
 
 models:
   - name: dim_cards
-    description: "Tabla dimensional con información detallada de cada carta MTG."
+    description: >
+      Tabla de dimensión con información consolidada de cartas.
     columns:
       - name: card_id
-        description: "Identificador de la carta. No es único porque hay cartas reeditadas que aparecen en varias colecciones"
+        description: ID único de impresión de la carta.
+        tests:
+          - not_null
+          - unique
+
+      - name: oracle_id
+        description: ID común entre versiones de una carta.
         tests:
           - not_null
 
-      - name: card_name
-        description: "Nombre de la carta"
-
-      - name: type_names
-        description: "Tipos normalizados concatenados"
-
-      - name: color_names
-        description: "Colores normalizados concatenados"
-
       - name: rarity
-        description: "Rareza de la carta"
+        description: Rareza textual.
+        tests:
+          - accepted_values:
+              values: ["common", "uncommon", "rare", "mythic"]
 
-      - name: scryfall_id
-        description: "Identificador externo en Scryfall"
+      - name: set_code
+        description: Código del set.
+        tests:
+          - not_null

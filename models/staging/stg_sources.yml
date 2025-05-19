@@ -2,21 +2,66 @@ version: 2
 
 sources:
   - name: bronze
-    description: "Fuente externa que contiene los datos raw cargados desde el dataset mtgjson (AllPrintings y AllPrices)."
+    description: "Datos crudos de cartas de Magic extraídos desde Scryfall."
     database: ALUMNO9_DEV_BRONZE_DB
     schema: bronze
     tables:
-      - name: raw_printings
-        description: >
-          Tabla raw con los datos crudos de AllPrintings.json. Contiene toda la información de sets y cartas.
-          Esta tabla solo tiene una columna (raw VARIANT) porque cada fila representa un único bloque JSON completo,
-          manteniendo el formato original del archivo de ingesta. 
-          Se utiliza este patrón para asegurar trazabilidad y consistencia de datos en la capa Bronze.
-      - name: raw_prices
-        description: >
-          Tabla raw con los datos crudos de AllPrices.json. 
-          Contiene la evolución histórica de precios de las cartas. 
-          Esta tabla solo tiene una columna porque cada fila representa un único bloque JSON completo, 
-          manteniendo el formato original del archivo de ingesta. 
-          Esta estructura facilita la ingesta y posterior transformación en la capa Silver mediante dbt.
+      - name: cards
+        description: Información cruda de cada impresión de carta de Magic.
+        columns:
+          - name: id
+            description: ID único de la impresión de la carta.
+          - name: oracle_id
+            description: ID común para todas las versiones de una misma carta.
+          - name: name
+            description: Nombre de la carta.
+          - name: "SET"
+            description: Código del set al que pertenece.
+          - name: collector_number
+            description: Número de colección.
+          - name: rarity
+            description: Rareza de la carta.
+          - name: mana_cost
+            description: Costo de maná.
+          - name: cmc
+            description: Costo convertido de maná.
+          - name: type_line
+            description: Línea de tipo de la carta.
+          - name: oracle_text
+            description: Texto de reglas.
+          - name: colors
+            description: Colores asociados (en formato string de lista).
+          - name: color_identity
+            description: Identidad de color (para formatos como Commander).
+          - name: layout
+            description: Diseño de la carta.
+          - name: released_at
+            description: Fecha de lanzamiento.
 
+      - name: card_prices
+        description: Precios actuales de las cartas.
+        columns:
+          - name: card_id
+            description: ID de la carta (coincide con cards.id).
+          - name: usd
+            description: Precio en USD.
+          - name: usd_foil
+            description: Precio foil en USD.
+          - name: eur
+            description: Precio en EUR.
+          - name: eur_foil
+            description: Precio foil en EUR.
+          - name: tix
+            description: Precio en MTGO.
+
+      - name: sets
+        description: Información básica sobre cada set publicado por Magic.
+        columns:
+          - name: set_code
+            description: Código corto del set.
+          - name: name
+            description: Nombre completo del set.
+          - name: released_at
+            description: Fecha de lanzamiento.
+          - name: set_type
+            description: Tipo del set (expansion, core, commander, etc.).

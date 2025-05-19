@@ -2,13 +2,21 @@ version: 2
 
 models:
   - name: stg_card_colors
-    description: "Vista staging que contiene una fila por cada color asociado a cada carta."
+    description: >
+      Tabla normalizada que representa los colores asociados a cada impresión de carta. 
+      Explota el array de colores y mapea las iniciales (W, U, B, R, G) a nombres completos.
     columns:
       - name: card_id
-        description: "Identificador único de la carta."
+        description: ID de la carta.
         tests:
           - not_null
-      - name: color
-        description: "Color individual de la carta."
+
+      - name: color_initial
+        description: Inicial del color según convención de Magic (W, U, B, R, G).
+        tests:
+          - not_null
+
+      - name: color_name
+        description: Nombre completo del color (White, Blue, Black, Red, Green).
         tests:
           - not_null

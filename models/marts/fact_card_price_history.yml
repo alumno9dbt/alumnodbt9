@@ -1,19 +1,15 @@
 version: 2
 
 models:
-  - name: fact_card_prices
+  - name: fact_card_price_history
     description: >
-      Tabla de hechos que relaciona cada impresión de carta con sus precios actuales en distintas monedas y formatos.
-      Incluye información de contexto como rareza, tipo, color y set.
+      Tabla de hechos incremental que almacena el historial de precios de cada impresión de carta.
+      Se alimenta del snapshot `stg_card_prices_snapshot`, y permite análisis de evolución en el tiempo.
     columns:
       - name: card_id
         description: ID único de la carta.
         tests:
           - not_null
-          - unique
-          - relationships:
-              to: ref('dim_cards')
-              field: card_id
 
       - name: name
         description: Nombre de la carta.
@@ -22,16 +18,13 @@ models:
         description: Código del set.
 
       - name: set_name
-        description: Nombre completo del set.
-
-      - name: set_released_at
-        description: Fecha de lanzamiento del set.
+        description: Nombre del set.
 
       - name: set_type
         description: Tipo del set.
 
-      - name: collector_number
-        description: Número de colección de la carta.
+      - name: set_released_at
+        description: Fecha de lanzamiento del set.
 
       - name: rarity
         description: Rareza textual.
@@ -39,20 +32,23 @@ models:
       - name: rarity_rank
         description: Rango numérico asociado a la rareza.
 
+      - name: collector_number
+        description: Número de colección de la carta.
+
       - name: main_types
-        description: Tipos principales de carta.
+        description: Tipos principales.
 
       - name: subtypes
-        description: Subtipos (ej. Goblin, Warrior).
+        description: Subtipos.
 
       - name: color_names
-        description: Colores descriptivos de la carta.
+        description: Colores descriptivos.
 
       - name: cmc
-        description: Costo convertido de maná.
+        description: Coste convertido de maná.
 
       - name: layout
-        description: Tipo de layout de la carta.
+        description: Diseño estructural de la carta.
 
       - name: usd
         description: Precio en USD.
@@ -65,6 +61,14 @@ models:
 
       - name: eur_foil
         description: Precio foil en EUR.
-        
+
       - name: tix
         description: Precio en Magic Online.
+
+      - name: price_valid_from
+        description: Fecha desde la que este precio es válido.
+        tests:
+          - not_null
+          
+      - name: price_valid_to
+        description: Fecha hasta la que este precio fue válido.

@@ -2,14 +2,18 @@ version: 2
 
 models:
   - name: stg_card_rarities
-    description: "Vista staging que contiene la rareza de cada carta para análisis de distribución."
+    description: >
+      Rarezas únicas presentes en el dataset.
     columns:
-      - name: card_id
-        description: "Identificador único (relativo) de la carta."
-        # no se aplica unique porque en MTGJSON muchas versiones de cartas comparten card_id.
+      - name: rarity
+        description: Nombre textual.
         tests:
           - not_null
-      - name: rarity
-        description: "Rareza de la carta (common, uncommon, rare, mythic, special)."
+          - unique
+          - accepted_values:
+              values: ["common", "uncommon", "rare", "mythic"]
+
+      - name: rarity_rank
+        description: Rango de rareza.
         tests:
           - not_null

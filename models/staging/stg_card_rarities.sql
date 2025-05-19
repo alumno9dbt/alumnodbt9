@@ -1,8 +1,17 @@
-{{ config(materialized='view') }}
+with source as (
+    select distinct
+        lower(rarity) as rarity
+    from {{ ref('base_cards') }}
+    where rarity is not null
+)
 
-SELECT
-    card_id,
-    rarity
-FROM {{ ref('stg_cards') }}
-WHERE card_id IS NOT NULL
-  AND rarity IS NOT NULL
+select
+    rarity,
+    case
+        when rarity = 'common' then 1
+        when rarity = 'uncommon' then 2
+        when rarity = 'rare' then 3
+        when rarity = 'mythic' then 4
+        else null
+    end as rarity_rank
+from source

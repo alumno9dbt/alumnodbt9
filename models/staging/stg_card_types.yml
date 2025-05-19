@@ -2,13 +2,20 @@ version: 2
 
 models:
   - name: stg_card_types
-    description: "Vista staging que contiene una fila por cada tipo asociado a cada carta."
+    description: >
+      Tipos de cada carta separados en dos columnas: tipos principales (del juego) 
+      y subtipos (como razas o clases). Una fila por carta.
     columns:
       - name: card_id
-        description: "Identificador único de la carta."
+        description: ID de la carta.
         tests:
           - not_null
-      - name: type
-        description: "Tipo individual extraído de type_line (ej: Creature, Land, Artifact...)."
+          - unique
+
+      - name: main_types
+        description: Lista de tipos de carta principales como Creature, Instant, etc.
         tests:
           - not_null
+
+      - name: subtypes
+        description: Lista de subtipos como Zombie, Elf, Warrior, etc.

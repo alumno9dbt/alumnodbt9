@@ -1,14 +1,19 @@
-{{ config(materialized='view') }}
+with source as (
+    select *
+    from {{ source('bronze', 'card_prices') }}
+),
 
-WITH exploded AS (
-    SELECT
-        k.key::string AS card_id,
-        k.value:"paper" AS paper_prices,
-        k.value:"mtgo" AS mtgo_prices
-    FROM {{ source('bronze', 'raw_prices') }},
-         LATERAL FLATTEN(input => raw) AS k
+cleaned as (
+    select
+        card_id,
+        try_cast(usd as float) as usd,
+        try_cast(usd_foil as float) as usd_foil,
+        try_cast(eur as float) as eur,
+        try_cast(eur_foil as float) as eur_foil,
+        try_cast(tix as float) as tix
+    from source
+    where card_id is not null
 )
 
-SELECT *
-FROM exploded
-WHERE card_id IS NOT NULL
+select *
+from cleaned
