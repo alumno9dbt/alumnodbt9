@@ -1,0 +1,12 @@
+version: 2
+
+models:
+  - name: dim_types
+    description: >
+      Tipos principales de carta.
+    columns:
+      - name: type
+        description: Tipo individual.
+        tests:
+          - not_null
+          - unique

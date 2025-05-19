@@ -1,0 +1,28 @@
+version: 2
+
+models:
+  - name: dim_cards
+    description: >
+      Tabla de dimensión con información consolidada de cartas.
+    columns:
+      - name: card_id
+        description: ID único de impresión de la carta.
+        tests:
+          - not_null
+          - unique
+
+      - name: oracle_id
+        description: ID común entre versiones de una carta.
+        tests:
+          - not_null
+
+      - name: rarity
+        description: Rareza textual.
+        tests:
+          - accepted_values:
+              values: ["common", "uncommon", "rare", "mythic"]
+
+      - name: set_code
+        description: Código del set.
+        tests:
+          - not_null

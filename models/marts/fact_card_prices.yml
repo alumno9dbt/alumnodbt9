@@ -1,0 +1,70 @@
+version: 2
+
+models:
+  - name: fact_card_prices
+    description: >
+      Tabla de hechos que relaciona cada impresión de carta con sus precios actuales en distintas monedas y formatos.
+      Incluye información de contexto como rareza, tipo, color y set.
+    columns:
+      - name: card_id
+        description: ID único de la carta.
+        tests:
+          - not_null
+          - unique
+          - relationships:
+              to: ref('dim_cards')
+              field: card_id
+
+      - name: name
+        description: Nombre de la carta.
+
+      - name: set_code
+        description: Código del set.
+
+      - name: set_name
+        description: Nombre completo del set.
+
+      - name: set_released_at
+        description: Fecha de lanzamiento del set.
+
+      - name: set_type
+        description: Tipo del set.
+
+      - name: collector_number
+        description: Número de colección de la carta.
+
+      - name: rarity
+        description: Rareza textual.
+
+      - name: rarity_rank
+        description: Rango numérico asociado a la rareza.
+
+      - name: main_types
+        description: Tipos principales de carta.
+
+      - name: subtypes
+        description: Subtipos (ej. Goblin, Warrior).
+
+      - name: color_names
+        description: Colores descriptivos de la carta.
+
+      - name: cmc
+        description: Costo convertido de maná.
+
+      - name: layout
+        description: Tipo de layout de la carta.
+
+      - name: usd
+        description: Precio en USD.
+
+      - name: usd_foil
+        description: Precio foil en USD.
+
+      - name: eur
+        description: Precio en EUR.
+
+      - name: eur_foil
+        description: Precio foil en EUR.
+        
+      - name: tix
+        description: Precio en Magic Online.

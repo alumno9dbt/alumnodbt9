@@ -1,0 +1,12 @@
+version: 2
+
+models:
+  - name: dim_subtypes
+    description: >
+      Subtipos individuales de carta.
+    columns:
+      - name: subtype
+        description: Subtipo individual.
+        tests:
+          - not_null
+          - unique

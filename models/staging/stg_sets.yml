@@ -3,7 +3,7 @@ version: 2
 models:
   - name: stg_sets
     description: >
-      Modelo staging de los sets de Magic. Cada fila representa un set publicado.
+      Datos básicos de los sets.
     columns:
       - name: set_code
         description: Código del set.
@@ -11,11 +11,8 @@ models:
           - not_null
           - unique
 
-      - name: set_name
-        description: Nombre completo del set.
-
-      - name: released_at
-        description: Fecha de lanzamiento del set.
-
       - name: set_type
-        description: Tipo de set (expansion, commander, etc).
+        description: Tipo de set.
+        tests:
+          - accepted_values:
+              values: ["expansion", "core", "commander", "masterpiece", "funny", "draft_innovation", "starter", "promo"]
