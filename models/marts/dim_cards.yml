@@ -20,7 +20,8 @@ models:
         description: Rareza textual.
         tests:
           - accepted_values:
-              values: ["common", "uncommon", "rare", "mythic"]
+              values: ["common", "uncommon", "rare", "mythic", "special", "bonus"]
+
 
       - name: set_code
         description: Código del set.

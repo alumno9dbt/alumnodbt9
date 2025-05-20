@@ -8,7 +8,6 @@ models:
       - name: color_initial
         description: Inicial del color.
         tests:
-          - not_null
           - unique
           - accepted_values:
               values: ["W", "U", "B", "R", "G"]

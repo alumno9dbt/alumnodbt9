@@ -1,3 +1,5 @@
+{{ config(materialized='table') }}
+
 with prices as (
     select *
     from {{ ref('stg_prices') }}
@@ -45,4 +47,4 @@ select
     p.eur_foil,
     p.tix
 from prices p
-left join cards c on p.card_id = c.card_id
+inner join cards c on p.card_id = c.card_id

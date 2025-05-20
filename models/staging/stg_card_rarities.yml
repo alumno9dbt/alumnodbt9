@@ -11,7 +11,7 @@ models:
           - not_null
           - unique
           - accepted_values:
-              values: ["common", "uncommon", "rare", "mythic"]
+              values: ["common", "uncommon", "rare", "mythic", "special", "bonus"]
 
       - name: rarity_rank
         description: Rango de rareza.

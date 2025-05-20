@@ -1,6 +1,9 @@
+{{ config(materialized='table') }}
+
 with base as (
     select *
     from {{ ref('base_cards') }}
+    where oracle_id is not null
 ),
 
 colors as (
