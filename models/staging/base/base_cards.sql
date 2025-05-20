@@ -1,3 +1,10 @@
+{{ config(
+    materialized='incremental',
+    unique_key='id',
+    incremental_strategy='merge',
+    merge_update_columns = ['oracle_id', 'name', 'set_code', 'collector_number', 'rarity', 'mana_cost', 'cmc', 'type_line', 'oracle_text', 'colors_array', 'color_identity_array', 'layout', 'released_at']
+) }}
+
 with source as (
     select *
     from {{ source('bronze', 'cards') }}
@@ -25,3 +32,8 @@ cleaned as (
 
 select *
 from cleaned
+{% if is_incremental() %}
+    where try_to_date(released_at) >= (
+        select max(released_at) from {{ this }}
+    )
+{% endif %}
