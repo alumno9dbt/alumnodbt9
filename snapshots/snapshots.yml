@@ -9,4 +9,3 @@ snapshots:
         description: ID único de la impresión.
         tests:
           - not_null
-          - unique

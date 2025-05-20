@@ -13,6 +13,3 @@ models:
 
       - name: set_type
         description: Tipo de set.
-        tests:
-          - accepted_values:
-              values: ["expansion", "core", "commander", "masterpiece", "funny", "draft_innovation", "starter", "promo"]

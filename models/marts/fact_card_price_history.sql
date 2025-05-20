@@ -1,16 +1,19 @@
 {{ config(
-    materialized='incremental',
-    unique_key='card_id || dbt_valid_from',
-    incremental_strategy='insert_overwrite',
-    partition_by={"field": "dbt_valid_from", "data_type": "date"}
+    materialized = 'incremental',
+    unique_key   = 'card_id || dbt_valid_from',
+    incremental_strategy = 'insert_overwrite',
+    partition_by = {"field": "dbt_valid_from", "data_type": "date"}
 ) }}
 
 with snapshot_data as (
+
     select *
     from {{ ref('stg_card_prices_snapshot') }}
+
 ),
 
 cards as (
+
     select
         card_id,
         name,
@@ -27,6 +30,7 @@ cards as (
         cmc,
         layout
     from {{ ref('dim_cards') }}
+
 )
 
 select
@@ -50,9 +54,12 @@ select
     s.eur_foil,
     s.tix,
     s.dbt_valid_from as price_valid_from,
-    s.dbt_valid_to as price_valid_to
+    s.dbt_valid_to   as price_valid_to
 from snapshot_data s
-left join cards c on s.card_id = c.card_id
+inner join cards c
+        on s.card_id = c.card_id
+
 {% if is_incremental() %}
-    where s.dbt_valid_from >= (select max(price_valid_from) from {{ this }})
+    -- solo incorpora nuevas versiones del snapshot
+    where s.dbt_valid_from >= (select coalesce(max(price_valid_from), '1900-01-01') from {{ this }})
 {% endif %}
