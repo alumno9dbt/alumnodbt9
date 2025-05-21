@@ -3,11 +3,13 @@ version: 2
 models:
   - name: stg_card_types
     description: >
-      Tipos de cada carta separados en dos columnas: tipos principales (del juego) 
-      y subtipos (como razas o clases). Una fila por carta.
+      Modelo de staging que extrae los tipos principales y subtipos de cada carta
+      desde base_cards. El campo type_line se limpia para descartar el contenido
+      duplicado causado por cartas de doble cara (se ignora todo después de ' // ').
+      Los tipos se separan correctamente y se ordenan alfabéticamente, eliminando duplicados.
     columns:
       - name: card_id
-        description: ID de la carta.
+        description: ID único de la carta.
         tests:
           - not_null
           - unique
@@ -16,9 +18,13 @@ models:
               field: id
 
       - name: main_types
-        description: Lista de tipos de carta principales como Creature, Instant, etc.
+        description: >
+          Tipos principales de la carta (ej. Creature, Sorcery, Enchantment), ordenados alfabéticamente y sin duplicados.
         tests:
           - not_null
-
+          
       - name: subtypes
-        description: Lista de subtipos como Zombie, Elf, Warrior, etc.
+        description: >
+          Subtipos asociados (ej. Elf, Warrior, Zombie), ordenados alfabéticamente y sin duplicados.
+        tests:
+          - not_null

@@ -1,11 +1,12 @@
-with raw as (
-    select
-        trim(split_part(type.value::string, ',', 1)) as type
+{{ config(materialized='table') }}
+
+with source as (
+    select distinct
+        trim(f.value) as main_type
     from {{ ref('stg_card_types') }},
-         lateral flatten(input => split(main_types, ', ')) as type
-    where main_types is not null
+         lateral flatten(input => split(main_types, ',')) as f
+    where f.value is not null
 )
 
-select distinct type
-from raw
-where type != ''
+select *
+from source
