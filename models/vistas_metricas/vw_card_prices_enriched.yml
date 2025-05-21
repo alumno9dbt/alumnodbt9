@@ -1,0 +1,37 @@
+version: 2
+
+models:
+  - name: vw_card_prices_enriched
+    description: >
+      Tabla materializada que combina los precios actuales de las cartas con su información contextual
+      como nombre, tipo, color, rareza y set. Diseñada para análisis de pricing en Power BI.
+    columns:
+      - name: card_id
+        description: Identificador único de la carta
+        tests:
+          - not_null
+          - unique
+
+      - name: card_name
+        description: Nombre de la carta
+
+      - name: set_name
+        description: Nombre del set al que pertenece la carta
+
+      - name: rarity
+        description: Rareza de la carta (e.g. common, rare, mythic)
+
+      - name: type_name
+        description: Tipos principales de la carta (main_types)
+
+      - name: color_name
+        description: Colores principales de la carta (color_names)
+
+      - name: usd
+        description: Precio actual en dólares estadounidenses
+
+      - name: eur
+        description: Precio actual en euros
+
+      - name: tix
+        description: Precio actual en TIX (plataforma MTGO)

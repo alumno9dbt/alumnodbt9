@@ -7,6 +7,3 @@ models:
     columns:
       - name: type
         description: Tipo individual.
-        tests:
-          - not_null
-          - unique

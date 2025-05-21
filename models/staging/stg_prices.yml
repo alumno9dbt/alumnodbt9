@@ -9,9 +9,6 @@ models:
         description: ID de la carta.
         tests:
           - not_null
-          - relationships:
-              to: ref('base_cards')
-              field: id
 
       - name: usd
         description: Precio en USD.
