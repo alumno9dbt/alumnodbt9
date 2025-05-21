@@ -9,14 +9,21 @@ models:
         description: ID de la carta.
         tests:
           - not_null
+          - relationships:
+              to: ref('base_cards')
+              field: id
 
       - name: usd
         description: Precio en USD.
+
       - name: usd_foil
         description: Precio foil en USD.
+
       - name: eur
         description: Precio en EUR.
+
       - name: eur_foil
         description: Precio foil en EUR.
+
       - name: tix
         description: Precio en MTGO.
