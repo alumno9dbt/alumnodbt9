@@ -10,6 +10,9 @@ models:
         description: ID de la carta.
         tests:
           - not_null
+          - relationships:
+              to: ref('base_cards')
+              field: id
 
       - name: color_initial
         description: Inicial del color según convención de Magic (W, U, B, R, G).

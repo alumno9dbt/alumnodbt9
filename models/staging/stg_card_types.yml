@@ -11,6 +11,9 @@ models:
         tests:
           - not_null
           - unique
+          - relationships:
+              to: ref('base_cards')
+              field: id
 
       - name: main_types
         description: Lista de tipos de carta principales como Creature, Instant, etc.
